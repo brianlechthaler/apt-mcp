@@ -1,0 +1,48 @@
+services:
+  dev:
+    build:
+      context: .
+      target: builder
+    image: apt-mcp-builder
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: bash
+
+  test:
+    build:
+      context: .
+      target: builder
+    image: apt-mcp-builder
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: cargo test
+
+  lint:
+    image: apt-mcp-builder
+    build:
+      context: .
+      target: builder
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: sh -c "cargo fmt --check && cargo clippy --all-targets --all-features -- -D warnings"
+
+  coverage:
+    image: apt-mcp-builder
+    build:
+      context: .
+      target: builder
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: sh -c "cargo llvm-cov --lib --all-features --fail-under-lines 100"
+
+  run:
+    build: .
+    stdin_open: true
+    tty: true
+    environment:
+      APT_MCP_SCOPES: read
+      RUST_LOG: info
