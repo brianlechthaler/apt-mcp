@@ -706,12 +706,10 @@ mod tests {
             .apt_list_installed(Parameters(ListInstalledParams { limit: None }))
             .await
             .unwrap();
-        assert!(
-            server
-                .apt_list_installed(Parameters(ListInstalledParams { limit: Some(0) }))
-                .await
-                .is_err()
-        );
+        assert!(server
+            .apt_list_installed(Parameters(ListInstalledParams { limit: Some(0) }))
+            .await
+            .is_err());
     }
 
     #[test]
